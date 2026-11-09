@@ -23,7 +23,7 @@ object Repository {
     )
 
     val users = mutableListOf(
-        User(1, "Camila Restrepo", "camila@ecomarket.co", "3001234567", Role.SELLER),
+        User(1, "Camila Restrepo", "camila@ecomarket.co", "3001234567", Role.SELLER, business = "Finca La Esperanza"),
         User(2, "María G. Torres", "maria.torres@correo.com", "3109876543", Role.BUYER),
         User(3, "Jorge R. Medina", "jorge.medina@correo.com", "3205551122", Role.BUYER),
         User(4, "Ana L. Ríos", "ana.rios@correo.com", "3157778899", Role.BUYER, active = false),
@@ -69,6 +69,10 @@ object Repository {
                 (query.isBlank() || it.name.contains(query, true) || it.producer.contains(query, true))
         }
 
+    /** Productos publicados por el negocio del vendedor autenticado. */
+    fun productsOfCurrentSeller(): List<Product> =
+        products.filter { it.producer == currentUser.business }
+
     fun productById(id: Int): Product? = products.firstOrNull { it.id == id }
 
     fun saveProduct(id: Int?, name: String, description: String, price: Int, stock: Int, category: String) {
@@ -81,7 +85,7 @@ object Repository {
             existing.category = category
         } else {
             products.add(
-                Product(nextProductId++, name, description, price, stock, category, currentUser.name, Approval.PENDING)
+                Product(nextProductId++, name, description, price, stock, category, currentUser.business.ifBlank { currentUser.name }, Approval.PENDING)
             )
         }
     }

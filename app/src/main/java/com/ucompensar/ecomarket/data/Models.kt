@@ -40,7 +40,8 @@ data class User(
     var email: String,
     var phone: String,
     var role: Role,
-    var active: Boolean = true
+    var active: Boolean = true,
+    val business: String = ""
 )
 
 data class CartItem(val product: Product, var quantity: Int) {

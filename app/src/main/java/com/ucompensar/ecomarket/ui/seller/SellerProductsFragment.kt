@@ -46,7 +46,7 @@ class SellerProductsFragment : Fragment() {
     }
 
     private fun refresh() {
-        adapter.items = Repository.products.toList()
+        adapter.items = Repository.productsOfCurrentSeller()
     }
 
     private fun confirmDelete(product: Product) {
