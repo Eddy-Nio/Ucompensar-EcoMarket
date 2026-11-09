@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/group_role" android:checkableBehavior="single" />
+    <group android:id="@+id/group_common">
+        <item android:id="@+id/drawer_profile" android:icon="@drawable/ic_person" android:title="@string/nav_profile" />
+        <item android:id="@+id/drawer_logout" android:icon="@drawable/ic_logout" android:title="@string/nav_logout" />
+    </group>
+</menu>

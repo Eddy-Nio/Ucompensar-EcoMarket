@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta EcoMarket definida en el documento técnico (Actividad 1) -->
+    <color name="eco_green">#2E7D32</color>
+    <color name="eco_green_dark">#1B5E20</color>
+    <color name="eco_green_light">#A5D6A7</color>
+    <color name="eco_green_surface">#E8F5E9</color>
+    <color name="eco_orange">#FF7043</color>
+    <color name="eco_orange_dark">#E64A19</color>
+    <color name="eco_background">#FFFFFF</color>
+    <color name="eco_gray_light">#F5F5F5</color>
+    <color name="eco_gray_border">#D5DBD6</color>
+    <color name="eco_text_primary">#212121</color>
+    <color name="eco_text_secondary">#5F6B62</color>
+    <color name="eco_white">#FFFFFF</color>
+    <color name="eco_error">#C62828</color>
+    <color name="eco_warning">#F9A825</color>
+    <color name="eco_info">#1E88E5</color>
+    <color name="eco_scrim">#80000000</color>
+</resources>
