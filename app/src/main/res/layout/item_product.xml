@@ -49,27 +49,20 @@
                 android:maxLines="1"
                 android:textAppearance="@style/Text.Caption" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/txtPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_s"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:textAppearance="@style/Text.Price" />
 
-                <TextView
-                    android:id="@+id/txtPrice"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAppearance="@style/Text.Price" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAdd"
-                    style="@style/Button.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/action_add" />
-            </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAdd"
+                style="@style/Button.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_s"
+                android:text="@string/action_add" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
