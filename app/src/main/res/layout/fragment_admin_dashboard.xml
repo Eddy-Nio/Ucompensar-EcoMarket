@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/space_m">
+
+        <TextView
+            android:id="@+id/txtGreeting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Text.Title" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/kpiSales"
+                layout="@layout/view_kpi" />
+
+            <include
+                android:id="@+id/kpiOrders"
+                layout="@layout/view_kpi" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/kpiUsers"
+                layout="@layout/view_kpi" />
+
+            <include
+                android:id="@+id/kpiProducts"
+                layout="@layout/view_kpi" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGoUsers"
+                style="@style/Button.Primary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_s"
+                android:layout_weight="1"
+                android:text="@string/nav_users" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGoReport"
+                style="@style/Button.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/nav_report" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/Section.Header"
+            android:text="@string/nav_orders" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRecentOrders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

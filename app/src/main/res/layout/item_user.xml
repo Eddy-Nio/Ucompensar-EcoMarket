@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Card.Eco"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/space_m">
+
+        <TextView
+            android:id="@+id/txtUserInitial"
+            android:layout_width="@dimen/avatar_size"
+            android:layout_height="@dimen/avatar_size"
+            android:background="@drawable/bg_avatar"
+            android:gravity="center"
+            android:textAppearance="@style/Text.Subtitle"
+            android:textColor="@color/eco_green_dark" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_m"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtUName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Text.Subtitle" />
+
+            <TextView
+                android:id="@+id/txtUEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/Text.Caption" />
+
+            <TextView
+                android:id="@+id/txtURole"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Text.Caption"
+                android:textColor="@color/eco_green" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtUStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/space_s"
+            android:paddingTop="@dimen/space_xs"
+            android:paddingEnd="@dimen/space_s"
+            android:paddingBottom="@dimen/space_xs"
+            android:textAppearance="@style/Text.Caption" />
+
+        <ImageButton
+            android:id="@+id/btnUDelete"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_delete"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/eco_error" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

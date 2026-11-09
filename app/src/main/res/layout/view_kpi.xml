@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/space_xs"
+    android:layout_weight="1"
+    android:background="@drawable/bg_kpi_card"
+    android:orientation="vertical"
+    android:padding="@dimen/space_m">
+
+    <TextView
+        android:id="@+id/txtKpiLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Text.Caption" />
+
+    <TextView
+        android:id="@+id/txtKpiValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xs"
+        android:textAppearance="@style/Text.Title"
+        android:textColor="@color/eco_green" />
+</LinearLayout>

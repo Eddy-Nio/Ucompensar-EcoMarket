@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/space_m">
+
+        <TextView
+            android:id="@+id/txtReportTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Text.Display"
+            android:textColor="@color/eco_green" />
+
+        <TextView
+            style="@style/Section.Header"
+            android:text="@string/report_by_day" />
+
+        <com.ucompensar.ecomarket.ui.admin.BarChartView
+            android:id="@+id/barChart"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chart_height" />
+
+        <TextView
+            style="@style/Section.Header"
+            android:text="@string/report_by_category" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvByCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+
+        <TextView
+            style="@style/Section.Header"
+            android:text="@string/report_top_products" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTopProducts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

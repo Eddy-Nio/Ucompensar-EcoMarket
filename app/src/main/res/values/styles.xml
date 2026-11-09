@@ -85,7 +85,7 @@
         <item name="chipStrokeColor">@color/eco_gray_border</item>
         <item name="checkedIconTint">@color/eco_green</item>
     </style>
-    <style name="Section.Header">
+    <style name="Section.Header" parent="">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/space_m</item>
