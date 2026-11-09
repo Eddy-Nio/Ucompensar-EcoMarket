@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Card.Eco"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/space_m">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtCartName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Text.Subtitle" />
+
+            <TextView
+                android:id="@+id/txtCartUnit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Text.Caption" />
+
+            <TextView
+                android:id="@+id/txtCartSubtotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:textAppearance="@style/Text.Price" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMinus"
+            style="@style/Widget.Material3.Button.IconButton.Outlined"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/cart_title"
+            android:text="−"
+            android:textColor="@color/eco_green"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
+            android:padding="0dp" />
+
+        <TextView
+            android:id="@+id/txtQty"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/Text.Subtitle" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPlus"
+            style="@style/Widget.Material3.Button.IconButton.Outlined"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="+"
+            android:textColor="@color/eco_green"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
+            android:padding="0dp" />
+
+        <ImageButton
+            android:id="@+id/btnRemove"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_delete"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/eco_error" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
