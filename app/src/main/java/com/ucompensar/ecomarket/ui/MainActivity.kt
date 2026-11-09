@@ -53,6 +53,8 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNav.inflateMenu(roleMenu())
         binding.navView.inflateMenu(roleMenu())
         binding.navView.inflateMenu(R.menu.menu_drawer_common)
+        // Comprador y Vendedor ya tienen "Perfil" en el menú de su rol; solo el Administrador lo necesita aquí
+        if (user.role != Role.ADMIN) binding.navView.menu.removeItem(R.id.drawer_profile)
 
         binding.bottomNav.setOnItemSelectedListener { item ->
             clearBackStack()
