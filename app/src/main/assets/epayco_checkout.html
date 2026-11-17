@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pago EcoMarket</title>
+  <style>
+    body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+           font-family: Roboto, sans-serif; background: #F5F5F5; color: #212121; text-align: center; }
+    .card { padding: 24px; }
+    .dot { width: 44px; height: 44px; margin: 0 auto 16px; border-radius: 50%;
+           border: 4px solid #A5D6A7; border-top-color: #2E7D32; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    button { margin-top: 16px; padding: 12px 24px; border: 0; border-radius: 24px;
+             background: #FF7043; color: #212121; font-size: 16px; font-weight: 600; }
+  </style>
+  <!-- Librería oficial del checkout web de ePayco -->
+  <script src="https://checkout.epayco.co/checkout.js"
+          onerror="Android.onError('No se pudo cargar el checkout de ePayco. Revise la conexión.')"></script>
+</head>
+<body>
+  <div class="card">
+    <div class="dot"></div>
+    <p id="msg">Conectando con ePayco…</p>
+    <button id="again" style="display:none" onclick="openCheckout()">Volver a abrir el pago</button>
+  </div>
+  <script>
+    // Datos de la orden inyectados por la app (EpaycoGateway.checkoutPage)
+    var data = __DATA__;
+    var handler = null;
+
+    function openCheckout() {
+      if (!window.ePayco) { Android.onError('El checkout de ePayco no está disponible.'); return; }
+      if (!handler) {
+        handler = ePayco.checkout.configure({ key: __KEY__, test: __TEST__ });
+        handler.onCloseModal = function () {
+          document.getElementById('msg').textContent = 'Cerraste la ventana de pago.';
+          document.getElementById('again').style.display = 'inline-block';
+          Android.onClosed();
+        };
+      }
+      document.getElementById('again').style.display = 'none';
+      document.getElementById('msg').textContent = 'Completa el pago en la ventana segura de ePayco.';
+      handler.open(data);
+    }
+    window.addEventListener('load', openCheckout);
+  </script>
+</body>
+</html>
