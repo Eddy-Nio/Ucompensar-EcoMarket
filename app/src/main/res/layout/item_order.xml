@@ -35,6 +35,12 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/txtOrderMeta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Text.Caption" />
+
+        <TextView
             android:id="@+id/txtOrderItems"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,12 +54,17 @@
             android:layout_marginTop="@dimen/space_xs"
             android:textAppearance="@style/Text.Price" />
 
+        <TextView
+            android:id="@+id/txtOrderPayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Text.Caption" />
+
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAdvance"
+            android:id="@+id/btnOrderAction"
             style="@style/Button.Outlined"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_s"
-            android:text="@string/action_advance_order" />
+            android:layout_marginTop="@dimen/space_s" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

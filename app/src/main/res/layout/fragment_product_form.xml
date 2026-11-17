@@ -10,6 +10,63 @@
         android:orientation="vertical"
         android:padding="@dimen/space_m">
 
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            app:indicatorColor="@color/eco_orange" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/product_photo"
+            android:textAppearance="@style/Text.Subtitle" />
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Card.Eco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp">
+
+            <ImageView
+                android:id="@+id/imgPreview"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/product_detail_image_height"
+                android:contentDescription="@string/cd_product_image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_product_placeholder" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCamera"
+                style="@style/Button.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_s"
+                android:layout_weight="1"
+                android:text="@string/action_camera"
+                app:icon="@drawable/ic_camera"
+                app:iconTint="@color/eco_green" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGallery"
+                style="@style/Button.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/action_gallery"
+                app:icon="@drawable/ic_gallery"
+                app:iconTint="@color/eco_green" />
+        </LinearLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPName"
             style="@style/Input.Eco"
@@ -90,6 +147,17 @@
                 android:layout_height="wrap_content"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/txtReviewNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:background="@drawable/bg_badge_warning"
+            android:padding="@dimen/space_s"
+            android:text="@string/product_review_note"
+            android:textAppearance="@style/Text.Caption"
+            android:textColor="@color/eco_text_primary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPSave"
