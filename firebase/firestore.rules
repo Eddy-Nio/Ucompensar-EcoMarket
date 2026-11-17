@@ -1,0 +1,64 @@
+rules_version = '2';
+
+// Reglas de seguridad de Cloud Firestore para EcoMarket.
+// El rol de cada usuario vive en users/{uid}.role (BUYER, SELLER o ADMIN).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+    function myProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    function isAdmin() {
+      return signedIn() && myProfile().role == 'ADMIN';
+    }
+    function isSeller() {
+      return signedIn() && myProfile().role == 'SELLER';
+    }
+    function onlyChanges(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+
+    // Perfiles: cada usuario lee y edita el suyo (sin cambiar rol ni estado); el administrador gestiona todos.
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if isAdmin()
+        || (signedIn() && request.auth.uid == uid && request.resource.data.role in ['BUYER', 'SELLER']);
+      allow update: if isAdmin()
+        || (signedIn() && request.auth.uid == uid && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'active', 'email']));
+      allow delete: if isAdmin();
+    }
+
+    // Productos: lectura para usuarios autenticados; el vendedor gestiona los suyos; el administrador modera.
+    match /products/{productId} {
+      allow read: if signedIn();
+      allow create: if isAdmin()
+        || (isSeller() && request.resource.data.sellerId == request.auth.uid && request.resource.data.approval == 'PENDING');
+      allow update: if isAdmin()
+        || (isSeller() && resource.data.sellerId == request.auth.uid && request.resource.data.approval == resource.data.approval)
+        // El comprador solo puede descontar stock al confirmar un pago
+        || (signedIn() && onlyChanges(['stock']) && request.resource.data.stock >= 0 && request.resource.data.stock < resource.data.stock);
+      allow delete: if isAdmin() || (isSeller() && resource.data.sellerId == request.auth.uid);
+    }
+
+    // Carrito: privado de cada usuario.
+    match /carts/{uid}/items/{productId} {
+      allow read, write: if signedIn() && request.auth.uid == uid;
+    }
+
+    // Órdenes: el comprador crea y paga las suyas; los vendedores implicados avanzan el envío; el administrador ve todo.
+    match /orders/{orderId} {
+      allow read: if signedIn()
+        && (resource.data.buyerId == request.auth.uid || request.auth.uid in resource.data.sellerIds || isAdmin());
+      allow create: if signedIn()
+        && request.resource.data.buyerId == request.auth.uid && request.resource.data.status == 'PENDING_PAYMENT';
+      allow update: if isAdmin()
+        || (resource.data.buyerId == request.auth.uid && resource.data.status == 'PENDING_PAYMENT'
+            && request.resource.data.status in ['PENDING_PAYMENT', 'PAID', 'PAYMENT_REJECTED'])
+        || (request.auth.uid in resource.data.sellerIds && onlyChanges(['status'])
+            && request.resource.data.status in ['SHIPPED', 'DELIVERED']);
+    }
+  }
+}
