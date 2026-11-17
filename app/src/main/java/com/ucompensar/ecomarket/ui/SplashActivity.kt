@@ -6,7 +6,9 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.ucompensar.ecomarket.R
+import com.ucompensar.ecomarket.ui.auth.LoginActivity
 
+/** Pantalla de bienvenida con la marca; tras una pausa breve abre el inicio de sesión. */
 class SplashActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
@@ -26,6 +28,6 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private companion object {
-        const val SPLASH_DELAY_MS = 1800L
+        const val SPLASH_DELAY_MS = 1500L
     }
 }

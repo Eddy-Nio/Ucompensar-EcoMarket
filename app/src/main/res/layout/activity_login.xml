@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-   
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -33,7 +32,22 @@
                 android:text="@string/app_name"
                 android:textAppearance="@style/Text.Title"
                 android:textColor="@color/eco_white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/slogan"
+                android:textAppearance="@style/Text.Caption"
+                android:textColor="@color/eco_green_light" />
         </LinearLayout>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            app:indicatorColor="@color/eco_orange" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,37 +68,6 @@
                 android:text="@string/login_subtitle"
                 android:textAppearance="@style/Text.Caption" />
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipRoles"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_m"
-                app:selectionRequired="true"
-                app:singleSelection="true">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipBuyer"
-                    style="@style/Chip.Eco"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/role_buyer" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipSeller"
-                    style="@style/Chip.Eco"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/role_seller" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipAdmin"
-                    style="@style/Chip.Eco"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/role_admin" />
-            </com.google.android.material.chip.ChipGroup>
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilEmail"
                 style="@style/Input.Eco"
@@ -98,6 +81,7 @@
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints="emailAddress"
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,6 +98,8 @@
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints="password"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -143,7 +129,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_s"
                 android:text="@string/action_biometric"
-                app:icon="@drawable/ic_fingerprint" />
+                android:visibility="gone"
+                app:icon="@drawable/ic_fingerprint"
+                app:iconTint="@color/eco_green" />
+
+            <TextView
+                android:id="@+id/txtRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/space_l"
+                android:padding="@dimen/space_s"
+                android:text="@string/action_go_register"
+                android:textAppearance="@style/Text.Subtitle"
+                android:textColor="@color/eco_green" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
