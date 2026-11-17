@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-   
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,6 +9,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="@dimen/space_m">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            app:indicatorColor="@color/eco_orange" />
 
         <TextView
             style="@style/Section.Header"
@@ -22,125 +29,123 @@
             android:layout_height="wrap_content"
             android:layout_margin="0dp">
 
-            <TextView
-                android:id="@+id/txtOrderSummary"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/space_m"
-                android:textAppearance="@style/Text.Body" />
+                android:orientation="vertical"
+                android:padding="@dimen/space_m">
+
+                <TextView
+                    android:id="@+id/txtOrderSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="4dp"
+                    android:textAppearance="@style/Text.Body" />
+
+                <TextView
+                    android:id="@+id/txtOrderTotals"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_s"
+                    android:lineSpacingExtra="4dp"
+                    android:textAppearance="@style/Text.Body" />
+
+                <TextView
+                    android:id="@+id/txtOrderTotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xs"
+                    android:textAppearance="@style/Text.Title"
+                    android:textColor="@color/eco_green" />
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
             style="@style/Section.Header"
-            android:text="@string/checkout_method" />
+            android:text="@string/checkout_address" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipPayment"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLocation"
+            style="@style/Button.Outlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:selectionRequired="true"
-            app:singleSelection="true">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipCard"
-                style="@style/Chip.Eco"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/pay_card" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipPse"
-                style="@style/Chip.Eco"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pay_pse" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipCash"
-                style="@style/Chip.Eco"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pay_cash" />
-        </com.google.android.material.chip.ChipGroup>
-
-        <LinearLayout
-            android:id="@+id/panelCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilCard"
-                style="@style/Input.Eco"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_card_number">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="16" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Input.Eco"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/space_s"
-                    android:layout_weight="1"
-                    android:hint="@string/hint_card_expiry">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="date"
-                        android:maxLength="5" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Input.Eco"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/hint_card_cvv"
-                    app:endIconMode="password_toggle">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberPassword"
-                        android:maxLength="4" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-        </LinearLayout>
+            android:text="@string/action_use_location"
+            app:icon="@drawable/ic_location"
+            app:iconTint="@color/eco_green" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilAddress"
             style="@style/Input.Eco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_address">
+            android:hint="@string/hint_address"
+            app:startIconDrawable="@drawable/ic_location">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPostalAddress" />
+                android:inputType="textPostalAddress|textMultiLine"
+                android:maxLines="3" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/txtCoordinates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xs"
+            android:textAppearance="@style/Text.Caption"
+            android:visibility="gone" />
+
+        <TextView
+            style="@style/Section.Header"
+            android:text="@string/checkout_payment" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_kpi_card"
+            android:orientation="horizontal"
+            android:padding="@dimen/space_m">
+
+            <ImageView
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_payment"
+                app:tint="@color/eco_green" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_m"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkout_payment_body"
+                    android:textAppearance="@style/Text.Body" />
+
+                <TextView
+                    android:id="@+id/txtTestMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xs"
+                    android:text="@string/checkout_test_mode"
+                    android:textAppearance="@style/Text.Caption"
+                    android:textColor="@color/eco_orange_dark" />
+            </LinearLayout>
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPay"
             style="@style/Button.Accent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_l" />
+            android:layout_marginTop="@dimen/space_l"
+            app:icon="@drawable/ic_payment"
+            app:iconTint="@color/eco_text_primary" />
     </LinearLayout>
 </ScrollView>

@@ -6,11 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.ucompensar.ecomarket.R
-import com.ucompensar.ecomarket.data.Repository
+import com.ucompensar.ecomarket.data.Session
+import com.ucompensar.ecomarket.data.model.Product
+import com.ucompensar.ecomarket.data.repository.CartRepository
+import com.ucompensar.ecomarket.data.repository.ProductRepository
 import com.ucompensar.ecomarket.databinding.FragmentProductDetailBinding
+import com.ucompensar.ecomarket.util.launchSafely
+import com.ucompensar.ecomarket.util.loadProductImage
 import com.ucompensar.ecomarket.util.toCop
 import com.ucompensar.ecomarket.util.toast
 
+/** Detalle de producto con foto, descripción, stock y selector de cantidad. */
 class ProductDetailFragment : Fragment() {
 
     private var _binding: FragmentProductDetailBinding? = null
@@ -23,29 +29,36 @@ class ProductDetailFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val product = Repository.productById(requireArguments().getInt(ARG_ID)) ?: return
-        activity?.title = product.name
+        launchSafely {
+            ProductRepository.get(requireArguments().getString(ARG_ID).orEmpty())?.let(::bind)
+        }
+    }
 
+    private fun bind(product: Product) {
+        activity?.title = product.name
+        binding.imgDetail.loadProductImage(product.imageUrl)
         binding.txtDetailName.text = product.name
         binding.txtDetailCategory.text = product.category
         binding.txtDetailPrice.text = product.price.toCop()
-        binding.txtDetailProducer.text = getString(R.string.detail_producer) + ": " + product.producer
+        binding.txtDetailProducer.text = getString(R.string.detail_producer, product.sellerName)
         binding.txtDetailStock.text = getString(R.string.detail_stock, product.stock)
         binding.txtDetailDescription.text = product.description
         binding.btnDetailAdd.isEnabled = product.stock > 0
 
-        binding.btnDetailMinus.setOnClickListener {
-            quantity = (quantity - 1).coerceAtLeast(1)
-            binding.txtDetailQty.text = quantity.toString()
-        }
-        binding.btnDetailPlus.setOnClickListener {
-            quantity = (quantity + 1).coerceAtMost(product.stock.coerceAtLeast(1))
-            binding.txtDetailQty.text = quantity.toString()
-        }
+        // La cantidad se limita al stock disponible
+        binding.btnDetailMinus.setOnClickListener { updateQuantity(quantity - 1, product.stock) }
+        binding.btnDetailPlus.setOnClickListener { updateQuantity(quantity + 1, product.stock) }
         binding.btnDetailAdd.setOnClickListener {
-            Repository.addToCart(product, quantity)
-            toast(getString(R.string.added_to_cart, product.name))
+            launchSafely {
+                CartRepository.add(Session.current.uid, product, quantity)
+                toast(getString(R.string.added_to_cart, product.name))
+            }
         }
+    }
+
+    private fun updateQuantity(value: Int, stock: Int) {
+        quantity = value.coerceIn(1, stock.coerceAtLeast(1))
+        binding.txtDetailQty.text = quantity.toString()
     }
 
     override fun onDestroyView() {
@@ -56,8 +69,8 @@ class ProductDetailFragment : Fragment() {
     companion object {
         private const val ARG_ID = "product_id"
 
-        fun newInstance(id: Int) = ProductDetailFragment().apply {
-            arguments = Bundle().apply { putInt(ARG_ID, id) }
+        fun newInstance(id: String) = ProductDetailFragment().apply {
+            arguments = Bundle().apply { putString(ARG_ID, id) }
         }
     }
 }

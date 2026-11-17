@@ -12,20 +12,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <FrameLayout
+        <ImageView
+            android:id="@+id/imgProduct"
             android:layout_width="match_parent"
             android:layout_height="@dimen/product_image_height"
-            android:background="@drawable/bg_product_image">
-
-            <ImageView
-                android:id="@+id/imgProduct"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/cd_product_image"
-                android:src="@drawable/ic_eco"
-                app:tint="@color/eco_green" />
-        </FrameLayout>
+            android:background="@drawable/bg_product_image"
+            android:contentDescription="@string/cd_product_image"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_product_placeholder" />
 
         <LinearLayout
             android:layout_width="match_parent"

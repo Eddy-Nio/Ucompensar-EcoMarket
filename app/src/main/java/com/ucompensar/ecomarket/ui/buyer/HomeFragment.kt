@@ -9,14 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
 import com.ucompensar.ecomarket.R
-import com.ucompensar.ecomarket.data.Product
-import com.ucompensar.ecomarket.data.Repository
+import com.ucompensar.ecomarket.data.Session
+import com.ucompensar.ecomarket.data.model.CATEGORIES
+import com.ucompensar.ecomarket.data.repository.ProductRepository
 import com.ucompensar.ecomarket.databinding.FragmentHomeBinding
-import com.ucompensar.ecomarket.databinding.ItemProductBinding
 import com.ucompensar.ecomarket.ui.MainActivity
-import com.ucompensar.ecomarket.ui.common.SimpleAdapter
-import com.ucompensar.ecomarket.util.toast
+import com.ucompensar.ecomarket.util.collectWhileVisible
 
+/** Inicio del comprador (RF-01): banner, accesos por categoría y productos recomendados. */
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -28,13 +28,12 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        activity?.title = getString(R.string.app_name)
+        activity?.title = getString(R.string.home_greeting, Session.current.name.substringBefore(' '))
         val main = requireActivity() as MainActivity
 
         binding.searchBar.setOnClickListener { main.selectTab(R.id.nav_catalog) }
         binding.txtSeeOffers.setOnClickListener { main.selectTab(R.id.nav_catalog) }
-
-        (listOf<String?>(null) + Repository.categories).forEach { category ->
+        (listOf<String?>(null) + CATEGORIES).forEach { category ->
             val chip = Chip(ContextThemeWrapper(requireContext(), R.style.Chip_Eco)).apply {
                 text = category ?: getString(R.string.category_all)
                 isCheckable = false
@@ -43,23 +42,21 @@ class HomeFragment : Fragment() {
             binding.chipCategories.addView(chip)
         }
 
-        val adapter = SimpleAdapter<Product, ItemProductBinding>(ItemProductBinding::inflate) { b, product ->
-            b.bindProduct(
-                product,
-                onOpen = { main.open(ProductDetailFragment.newInstance(it.id)) },
-                onAdd = {
-                    Repository.addToCart(it)
-                    toast(getString(R.string.added_to_cart, it.name))
-                }
-            )
-        }
-        adapter.items = Repository.approvedProducts().take(6)
+        val adapter = buyerProductAdapter()
         binding.rvRecommended.layoutManager = LinearLayoutManager(requireContext())
         binding.rvRecommended.adapter = adapter
+        // Recomendados: productos aprobados con stock, en tiempo real desde Firestore
+        collectWhileVisible(ProductRepository.observeApproved()) { products ->
+            adapter.submitList(products.filter { it.stock > 0 }.take(RECOMMENDED))
+        }
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private companion object {
+        const val RECOMMENDED = 6
     }
 }
