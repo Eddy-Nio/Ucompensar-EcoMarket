@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Card.Eco"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -15,6 +16,16 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgApThumb"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="@dimen/space_m"
+                android:background="@drawable/bg_kpi_card"
+                android:contentDescription="@string/cd_product_image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_product_placeholder" />
 
             <TextView
                 android:id="@+id/txtApName"
@@ -61,7 +72,17 @@
                 style="@style/Button.Danger"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_s"
                 android:text="@string/action_reject" />
+
+            <ImageButton
+                android:id="@+id/btnApDelete"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/action_delete"
+                android:src="@drawable/ic_delete"
+                app:tint="@color/eco_error" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -16,7 +16,7 @@ class BarChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private val labels = listOf("L", "M", "X", "J", "V", "S", "D")
+    private var labels: List<String> = emptyList()
     private var values: List<Int> = emptyList()
 
     private val barPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -32,7 +32,9 @@ class BarChartView @JvmOverloads constructor(
     private val colorStrong = ContextCompat.getColor(context, R.color.eco_green)
     private val colorLight = ContextCompat.getColor(context, R.color.eco_green_light)
 
-    fun setValues(data: List<Int>) {
+    /** Actualiza las barras; [labels] y [data] deben tener el mismo tamaño. */
+    fun setValues(labels: List<String>, data: List<Int>) {
+        this.labels = labels
         values = data
         invalidate()
     }
@@ -53,9 +55,10 @@ class BarChartView @JvmOverloads constructor(
         values.forEachIndexed { index, value ->
             val left = index * slot + (slot - barWidth) / 2f
             val barTop = bottom - (bottom - top) * value / maxValue
-            barPaint.color = if (index % 2 == 0) colorStrong else colorLight
+            // La barra de hoy (la última) va en verde intenso; las anteriores en verde claro
+            barPaint.color = if (index == values.lastIndex) colorStrong else colorLight
             canvas.drawRoundRect(RectF(left, barTop, left + barWidth, bottom), 12f, 12f, barPaint)
-            canvas.drawText(labels[index], left + barWidth / 2f, height - textPaint.textSize * 0.6f, textPaint)
+            canvas.drawText(labels.getOrElse(index) { "" }, left + barWidth / 2f, height - textPaint.textSize * 0.6f, textPaint)
         }
     }
 }

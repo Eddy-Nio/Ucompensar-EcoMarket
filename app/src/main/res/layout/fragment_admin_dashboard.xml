@@ -48,6 +48,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/kpiPending"
+                layout="@layout/view_kpi" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_m"
             android:orientation="horizontal">
 
@@ -71,7 +81,7 @@
 
         <TextView
             style="@style/Section.Header"
-            android:text="@string/nav_orders" />
+            android:text="@string/admin_recent_orders" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvRecentOrders"

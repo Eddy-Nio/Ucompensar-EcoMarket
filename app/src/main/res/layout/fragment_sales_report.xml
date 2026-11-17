@@ -17,6 +17,23 @@
             android:textColor="@color/eco_green" />
 
         <TextView
+            android:id="@+id/txtReportCaption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Text.Caption" />
+
+        <TextView
+            android:id="@+id/txtReportEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:background="@drawable/bg_badge_warning"
+            android:padding="@dimen/space_m"
+            android:text="@string/report_empty"
+            android:textAppearance="@style/Text.Body"
+            android:visibility="gone" />
+
+        <TextView
             style="@style/Section.Header"
             android:text="@string/report_by_day" />
 
