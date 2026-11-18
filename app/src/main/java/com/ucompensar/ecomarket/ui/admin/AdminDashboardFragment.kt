@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ucompensar.ecomarket.R
 import com.ucompensar.ecomarket.data.Session
 import com.ucompensar.ecomarket.data.model.Approval
+import com.ucompensar.ecomarket.data.model.AuditLog
+import com.ucompensar.ecomarket.data.model.Role
 import com.ucompensar.ecomarket.data.model.Order
 import com.ucompensar.ecomarket.data.repository.OrderRepository
 import com.ucompensar.ecomarket.data.repository.ProductRepository
@@ -20,9 +22,11 @@ import com.ucompensar.ecomarket.ui.MainActivity
 import com.ucompensar.ecomarket.ui.common.SimpleAdapter
 import com.ucompensar.ecomarket.ui.common.bindOrder
 import com.ucompensar.ecomarket.util.collectWhileVisible
+import com.ucompensar.ecomarket.util.show
 import com.ucompensar.ecomarket.util.toCop
+import com.ucompensar.ecomarket.util.toShortDate
 
-/** Dashboard del administrador: indicadores en tiempo real calculados desde Firestore. */
+/** Dashboard del administrador: indicadores en tiempo real calculados desde Firestore y bitácora de auditoría. */
 class AdminDashboardFragment : Fragment() {
 
     private var _binding: FragmentAdminDashboardBinding? = null
@@ -53,11 +57,26 @@ class AdminDashboardFragment : Fragment() {
         collectWhileVisible(UserRepository.observeAll()) { users ->
             bindKpi(binding.kpiUsers, R.string.kpi_users, users.size.toString())
         }
+        collectWhileVisible(UserRepository.observeRecentAudit()) { logs -> renderAudit(logs) }
         collectWhileVisible(ProductRepository.observeAll()) { products ->
             bindKpi(binding.kpiProducts, R.string.kpi_products, products.size.toString())
             bindKpi(binding.kpiPending, R.string.kpi_pending_products, products.count { it.approval == Approval.PENDING }.toString())
         }
     }
+
+    /** Muestra las últimas acciones administrativas registradas en la bitácora. */
+    private fun renderAudit(logs: List<AuditLog>) {
+        binding.txtAuditEmpty.show(logs.isEmpty())
+        binding.txtAudit.show(logs.isNotEmpty())
+        binding.txtAudit.text = logs.joinToString("\n\n") { log ->
+            val action = getString(log.action.labelRes, log.targetName)
+            val roles = if (log.fromRole.isNotBlank() && log.toRole.isNotBlank())
+                " " + getString(R.string.audit_roles, roleLabel(log.fromRole), roleLabel(log.toRole)) else ""
+            getString(R.string.audit_line, log.createdAt.toShortDate(), log.actorName, action) + roles
+        }
+    }
+
+    private fun roleLabel(name: String) = getString(Role.valueOf(name).labelRes)
 
     private fun bindKpi(kpi: ViewKpiBinding, label: Int, value: String) {
         kpi.txtKpiLabel.setText(label)

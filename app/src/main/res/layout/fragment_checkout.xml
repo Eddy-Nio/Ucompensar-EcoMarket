@@ -139,6 +139,13 @@
             </LinearLayout>
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:text="@string/checkout_consumer_rights"
+            android:textAppearance="@style/Text.Caption" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPay"
             style="@style/Button.Accent"

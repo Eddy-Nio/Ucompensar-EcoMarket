@@ -10,10 +10,12 @@ internal object FirestorePaths {
     const val CARTS = "carts"
     const val ITEMS = "items"
     const val ORDERS = "orders"
+    const val AUDIT_LOGS = "audit_logs"
 
     val db get() = Firebase.firestore
     fun users() = db.collection(USERS)
     fun products() = db.collection(PRODUCTS)
     fun orders() = db.collection(ORDERS)
+    fun auditLogs() = db.collection(AUDIT_LOGS)
     fun cart(uid: String) = db.collection(CARTS).document(uid).collection(ITEMS)
 }

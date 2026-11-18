@@ -55,8 +55,39 @@ data class UserProfile(
     var role: Role = Role.BUYER,
     var active: Boolean = true,
     var business: String = "",
+    /** Fecha en que el titular aceptó la política de datos (prueba de la autorización, Ley 1581 art. 9 y 17). */
+    var privacyAcceptedAt: Date? = null,
+    var privacyPolicyVersion: String = "",
     @ServerTimestamp var createdAt: Date? = null
 )
+
+/** Acción administrativa registrada en la bitácora de auditoría. */
+enum class AuditAction(@StringRes val labelRes: Int) {
+    USER_CREATED(R.string.audit_user_created),
+    ROLE_CHANGED(R.string.audit_role_changed),
+    USER_SUSPENDED(R.string.audit_user_suspended),
+    USER_REACTIVATED(R.string.audit_user_reactivated),
+    USER_DELETED(R.string.audit_user_deleted)
+}
+
+/**
+ * Entrada de la bitácora en `audit_logs/{id}`. Solo el administrador la crea y la lee, y las
+ * reglas de Firestore impiden modificarla o borrarla, así queda como evidencia inalterable.
+ */
+data class AuditLog(
+    @DocumentId var id: String = "",
+    var action: AuditAction = AuditAction.ROLE_CHANGED,
+    var actorId: String = "",
+    var actorName: String = "",
+    var targetId: String = "",
+    var targetName: String = "",
+    var fromRole: String = "",
+    var toRole: String = "",
+    @ServerTimestamp var createdAt: Date? = null
+)
+
+/** Versión vigente de la política de tratamiento de datos que acepta el usuario al registrarse. */
+const val PRIVACY_POLICY_VERSION = "1.0"
 
 /** Producto del catálogo guardado en `products/{id}`; la imagen vive en Firebase Storage. */
 data class Product(

@@ -165,6 +165,18 @@
                 android:textAppearance="@style/Text.Caption"
                 app:buttonTint="@color/eco_green" />
 
+            <TextView
+                android:id="@+id/txtPrivacyNotice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:paddingTop="@dimen/space_xs"
+                android:paddingBottom="@dimen/space_xs"
+                android:text="@string/privacy_view"
+                android:textAppearance="@style/Text.Body"
+                android:textColor="@color/eco_green"
+                android:textStyle="bold" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRegister"
                 style="@style/Button.Primary"

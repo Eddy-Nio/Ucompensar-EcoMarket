@@ -81,6 +81,28 @@
 
         <TextView
             style="@style/Section.Header"
+            android:text="@string/audit_title" />
+
+        <TextView
+            android:id="@+id/txtAudit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_kpi_card"
+            android:lineSpacingExtra="2dp"
+            android:padding="@dimen/space_m"
+            android:textAppearance="@style/Text.Caption"
+            android:textColor="@color/eco_text_primary"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtAuditEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/audit_empty"
+            android:textAppearance="@style/Text.Caption" />
+
+        <TextView
+            style="@style/Section.Header"
             android:text="@string/admin_recent_orders" />
 
         <androidx.recyclerview.widget.RecyclerView

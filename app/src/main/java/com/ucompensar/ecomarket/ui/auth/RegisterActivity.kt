@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ucompensar.ecomarket.R
 import com.ucompensar.ecomarket.data.model.Role
 import com.ucompensar.ecomarket.data.repository.AuthRepository
@@ -30,7 +31,17 @@ class RegisterActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
         // El nombre del negocio solo se pide a los vendedores
         binding.chipRoles.setOnCheckedStateChangeListener { _, _ -> binding.tilBusiness.show(selectedRole() == Role.SELLER) }
+        binding.txtPrivacyNotice.setOnClickListener { showPrivacyNotice() }
         binding.btnRegister.setOnClickListener { register() }
+    }
+
+    /** Aviso de privacidad (Decreto 1377 de 2013, compilado en el Decreto 1074 de 2015). */
+    private fun showPrivacyNotice() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.privacy_title)
+            .setMessage(R.string.privacy_body)
+            .setPositiveButton(R.string.action_back, null)
+            .show()
     }
 
     private fun selectedRole(): Role = if (binding.chipRoles.checkedChipId == R.id.chipSeller) Role.SELLER else Role.BUYER

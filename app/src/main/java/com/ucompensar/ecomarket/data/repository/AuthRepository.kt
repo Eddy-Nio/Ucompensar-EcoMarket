@@ -7,6 +7,7 @@ import com.google.firebase.auth.userProfileChangeRequest
 import com.ucompensar.ecomarket.R
 import com.ucompensar.ecomarket.data.AppException
 import com.ucompensar.ecomarket.data.Session
+import com.ucompensar.ecomarket.data.model.PRIVACY_POLICY_VERSION
 import com.ucompensar.ecomarket.data.model.Role
 import com.ucompensar.ecomarket.data.model.UserProfile
 import kotlinx.coroutines.tasks.await
@@ -42,7 +43,9 @@ object AuthRepository {
         user.updateProfile(userProfileChangeRequest { displayName = name }).await()
         val profile = UserProfile(
             uid = user.uid, name = name, email = email, phone = phone, role = role,
-            business = if (role == Role.SELLER) business else ""
+            business = if (role == Role.SELLER) business else "",
+            // Se conserva la fecha y la versión de la política aceptada como prueba de la autorización
+            privacyAcceptedAt = java.util.Date(), privacyPolicyVersion = PRIVACY_POLICY_VERSION
         )
         FirestorePaths.users().document(user.uid).set(profile).await()
         Session.profile = profile.copy(uid = user.uid)

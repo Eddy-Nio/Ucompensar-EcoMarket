@@ -82,7 +82,7 @@ class UsersFragment : Fragment() {
             .setNegativeButton(R.string.action_cancel, null)
             .setPositiveButton(R.string.action_delete) { _, _ ->
                 launchSafely {
-                    UserRepository.delete(user.uid)
+                    UserRepository.delete(user)
                     toast(getString(R.string.user_deleted))
                 }
             }

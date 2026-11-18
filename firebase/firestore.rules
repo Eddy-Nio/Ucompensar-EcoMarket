@@ -11,24 +11,41 @@ service cloud.firestore {
     function myProfile() {
       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
     }
+    // Una cuenta suspendida (active == false) pierde los privilegios de su rol
     function isAdmin() {
-      return signedIn() && myProfile().role == 'ADMIN';
+      return signedIn() && myProfile().role == 'ADMIN' && myProfile().active == true;
     }
     function isSeller() {
-      return signedIn() && myProfile().role == 'SELLER';
+      return signedIn() && myProfile().role == 'SELLER' && myProfile().active == true;
+    }
+    function changes(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasAny(keys);
     }
     function onlyChanges(keys) {
       return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
     }
 
-    // Perfiles: cada usuario lee y edita el suyo (sin cambiar rol ni estado); el administrador gestiona todos.
+    // Perfiles: cada usuario lee y edita el suyo (sin cambiar rol, estado ni correo); el administrador gestiona todos.
+    // Criterios de seguridad en la asignación de roles:
+    //  - Al registrarse solo se puede elegir comprador o vendedor, con la cuenta activa.
+    //  - Solo un administrador asigna o cambia roles, y nunca el suyo propio.
+    //  - Un administrador no puede suspenderse ni eliminarse a sí mismo.
     match /users/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
       allow create: if isAdmin()
-        || (signedIn() && request.auth.uid == uid && request.resource.data.role in ['BUYER', 'SELLER']);
-      allow update: if isAdmin()
-        || (signedIn() && request.auth.uid == uid && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'active', 'email']));
-      allow delete: if isAdmin();
+        || (signedIn() && request.auth.uid == uid
+            && request.resource.data.role in ['BUYER', 'SELLER']
+            && request.resource.data.active == true);
+      allow update: if (isAdmin() && (request.auth.uid != uid || !changes(['role', 'active', 'email'])))
+        || (signedIn() && request.auth.uid == uid && !changes(['role', 'active', 'email']));
+      allow delete: if isAdmin() && request.auth.uid != uid;
+    }
+
+    // Bitácora de auditoría: solo el administrador escribe (firmando con su uid) y lee; nadie la modifica ni la borra.
+    match /audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() && request.resource.data.actorId == request.auth.uid;
+      allow update, delete: if false;
     }
 
     // Productos: lectura para usuarios autenticados; el vendedor gestiona los suyos; el administrador modera.
