@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 12+: la pantalla de arranque del sistema usa el verde de la marca en vez del blanco por defecto -->
+    <style name="Theme.EcoMarket.Splash">
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+        <item name="android:statusBarColor">@color/eco_green_dark</item>
+        <item name="android:navigationBarColor">@color/eco_green_dark</item>
+        <item name="android:windowSplashScreenBackground">@color/eco_green</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher</item>
+    </style>
+</resources>
