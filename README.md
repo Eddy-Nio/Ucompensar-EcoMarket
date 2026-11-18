@@ -10,7 +10,7 @@ Aplicación Android nativa (Kotlin + XML) para comprar y vender productos sosten
 |---|---|
 | Autenticación | Registro (comprador o vendedor), inicio y cierre de sesión, recuperación y cambio de contraseña con **Firebase Authentication** |
 | Biometría | Ingreso con huella: `BiometricPrompt` + llave AES del **Android Keystore** que solo se desbloquea con la huella y cifra las credenciales |
-| CRUD de usuarios | El administrador lista, busca, crea, edita (rol y estado) y elimina usuarios en **Cloud Firestore** |
+| CRUD de usuarios | El administrador lista, busca, crea, edita (rol y estado) y elimina usuarios en **Cloud Firestore**, con doble confirmación al cambiar roles y **bitácora de auditoría** |
 | CRUD de productos | El vendedor crea, edita y elimina productos con foto tomada con la **cámara** o elegida de la **galería**, guardada en **Firebase Storage**; el administrador los aprueba o rechaza |
 | Carrito y órdenes | Carrito persistido en Firestore, órdenes con historial y estados: pendiente de pago → pagado → enviado → entregado |
 | Geolocalización | `FusedLocationProviderClient` (Google Play Services) obtiene la ubicación y `Geocoder` la convierte en la dirección de entrega |
@@ -47,12 +47,31 @@ app/src/main/java/com/ucompensar/ecomarket
 
 | Colección | Documento | Contenido |
 |---|---|---|
-| `users` | `{uid}` | nombre, correo, teléfono, rol (`BUYER`, `SELLER`, `ADMIN`), estado, negocio |
+| `users` | `{uid}` | nombre, correo, teléfono, rol (`BUYER`, `SELLER`, `ADMIN`), estado, negocio, fecha y versión de la autorización de datos |
+| `audit_logs` | `{id}` | acción, autor, usuario afectado, rol anterior y nuevo, fecha |
 | `products` | `{id}` | nombre, descripción, precio, stock, categoría, vendedor, URL de la imagen, aprobación |
 | `carts/{uid}/items` | `{productId}` | cantidad y copia del precio |
 | `orders` | `{id}` | comprador, líneas, totales con IVA, dirección y coordenadas, estado, referencia de ePayco |
 
 Las reglas de seguridad están en [`firebase/firestore.rules`](firebase/firestore.rules) y [`firebase/storage.rules`](firebase/storage.rules): cada usuario solo lee y modifica lo suyo, el vendedor solo gestiona sus productos y el administrador gestiona todo.
+
+### Seguridad en la asignación de roles
+
+| Criterio | Dónde se aplica |
+|---|---|
+| El rol de administrador nunca se autoasigna (el registro solo permite comprador o vendedor) | Reglas de Firestore |
+| Solo un administrador activo asigna o cambia roles | Reglas de Firestore |
+| Nadie cambia su propio rol ni se suspende o elimina a sí mismo | Reglas de Firestore e interfaz |
+| Siempre queda al menos un administrador activo | `UserRepository` |
+| Una cuenta suspendida pierde los privilegios de su rol | Reglas de Firestore y login |
+| Todo cambio de rol se confirma; conceder administrador pide una segunda confirmación | `UserFormFragment` |
+| Cada acción administrativa queda en `audit_logs`, que nadie puede editar ni borrar | Reglas de Firestore |
+
+### Normatividad aplicada en la app
+
+- **Ley 1581 de 2012 y Decreto 1377 de 2013**: aviso de privacidad consultable en el registro, autorización expresa y registro de su fecha y versión en el perfil (`privacyAcceptedAt`, `privacyPolicyVersion`).
+- **Ley 1480 de 2011**: precio total con IVA discriminado antes de pagar y aviso del derecho de retracto (art. 47) y de reversión del pago (art. 51).
+- **Ley 527 de 1999**: cada orden conserva la referencia y el estado de la transacción de ePayco.
 
 ## Cómo ejecutarla
 
