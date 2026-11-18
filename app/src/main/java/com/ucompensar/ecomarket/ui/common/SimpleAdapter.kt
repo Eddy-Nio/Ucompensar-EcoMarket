@@ -33,4 +33,16 @@ class SimpleAdapter<T : Any, VB : ViewBinding>(
         Holder(inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: Holder<VB>, position: Int) = onBind(holder.binding, getItem(position))
+
+    /**
+     * Lleva la lista al inicio cuando llega un elemento nuevo en la primera posición
+     * (por ejemplo, el producto o pedido recién creado), para que el usuario lo vea.
+     */
+    fun scrollToTopOnInsert(list: RecyclerView) {
+        registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                if (positionStart == 0) list.scrollToPosition(0)
+            }
+        })
+    }
 }

@@ -47,6 +47,7 @@ class SellerProductsFragment : Fragment() {
         activity?.title = getString(R.string.seller_panel_title)
         binding.rvSellerProducts.layoutManager = LinearLayoutManager(requireContext())
         binding.rvSellerProducts.adapter = adapter
+        adapter.scrollToTopOnInsert(binding.rvSellerProducts)
         binding.fabNewProduct.setOnClickListener { (requireActivity() as MainActivity).open(ProductFormFragment.newInstance(null)) }
         collectWhileVisible(ProductRepository.observeBySeller(Session.current.uid)) { products ->
             adapter.submitList(products)

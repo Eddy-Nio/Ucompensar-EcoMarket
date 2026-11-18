@@ -42,6 +42,7 @@ class SellerOrdersFragment : Fragment() {
         activity?.title = getString(R.string.seller_orders_title)
         binding.rvList.layoutManager = LinearLayoutManager(requireContext())
         binding.rvList.adapter = adapter
+        adapter.scrollToTopOnInsert(binding.rvList)
         collectWhileVisible(OrderRepository.observeBySeller(uid)) { orders ->
             adapter.submitList(orders)
             binding.txtListEmpty.show(orders.isEmpty())

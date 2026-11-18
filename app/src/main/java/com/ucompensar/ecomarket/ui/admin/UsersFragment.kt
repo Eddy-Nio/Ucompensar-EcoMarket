@@ -48,6 +48,7 @@ class UsersFragment : Fragment() {
         activity?.title = getString(R.string.users_title)
         binding.rvUsers.layoutManager = LinearLayoutManager(requireContext())
         binding.rvUsers.adapter = adapter
+        adapter.scrollToTopOnInsert(binding.rvUsers)
         binding.fabNewUser.setOnClickListener { (requireActivity() as MainActivity).open(UserFormFragment.newInstance(null)) }
         binding.etUserSearch.doAfterTextChanged { applyFilters() }
         binding.chipUserFilter.setOnCheckedStateChangeListener { _, _ -> applyFilters() }

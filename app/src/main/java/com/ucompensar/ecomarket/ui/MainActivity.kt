@@ -7,6 +7,8 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -48,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         setupMenus(profile.role)
+        hideBottomNavWithKeyboard()
         setupHeader()
         setupBackHandling()
 
@@ -85,6 +88,15 @@ class MainActivity : AppCompatActivity() {
             val nested = supportFragmentManager.backStackEntryCount > 0
             binding.toolbar.setNavigationIcon(if (nested) R.drawable.ic_back else R.drawable.ic_menu)
             binding.toolbar.setNavigationContentDescription(if (nested) R.string.cd_back else R.string.drawer_open)
+        }
+    }
+
+    /** Oculta la barra inferior mientras el teclado está abierto para no tapar los formularios. */
+    private fun hideBottomNavWithKeyboard() {
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            val imeVisible = ViewCompat.getRootWindowInsets(binding.root)?.isVisible(WindowInsetsCompat.Type.ime()) == true
+            val target = if (imeVisible) android.view.View.GONE else android.view.View.VISIBLE
+            if (binding.bottomNav.visibility != target) binding.bottomNav.visibility = target
         }
     }
 
