@@ -10,6 +10,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import coil.load
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.ucompensar.ecomarket.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -41,11 +43,17 @@ fun ImageView.loadProductImage(url: String) {
 /**
  * Recoge un Flow (por ejemplo, un listener de Firestore) solo mientras la vista está visible.
  * Al salir de la pantalla el listener se cancela, lo que evita fugas y lecturas innecesarias.
+ * Si el error llega después de cerrar sesión (el listener aún no se había cancelado y Firestore
+ * lo rechaza por falta de permisos), no se muestra: la pantalla ya se está cerrando.
  */
 fun <T> Fragment.collectWhileVisible(flow: Flow<T>, onError: (Throwable) -> Unit = {}, action: suspend (T) -> Unit) {
     viewLifecycleOwner.lifecycleScope.launch {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            flow.catch { onError(it); context?.let { ctx -> toast(it.toUserMessage(ctx)) } }.collect(action)
+            flow.catch {
+                onError(it)
+                if (Firebase.auth.currentUser == null) return@catch
+                context?.let { ctx -> toast(it.toUserMessage(ctx)) }
+            }.collect(action)
         }
     }
 }
