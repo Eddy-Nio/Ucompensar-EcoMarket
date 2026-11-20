@@ -13,3 +13,5 @@ firebase-debug.log
 firestore-debug.log
 ui-debug.log
 emulator-data/
+# Configuración de Firebase en la nube (local, no se versiona)
+/app/google-services.json
