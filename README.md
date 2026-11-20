@@ -83,7 +83,9 @@ Requisitos: Android Studio (Koala o superior) o JDK 17, Android SDK 34, `minSdk 
 2. Descargue `google-services.json` y cópielo en `app/`.
 3. Active **Authentication → Correo/contraseña**, **Firestore Database** y **Storage**. Storage puede pedir activar el plan Blaze, que tiene una capa gratuita.
 4. Publique las reglas: `firebase deploy --only firestore:rules,storage` (o péguelas en la consola).
-5. Cree la primera cuenta desde la app y, en la consola de Firestore, cambie su `role` a `ADMIN`.
+5. Cree la primera cuenta desde la app y, en la consola de Firestore, cambie su `role` a `ADMIN`. Los demás cambios de rol se hacen desde la app y quedan en la bitácora.
+
+`google-services.json` está en `.gitignore`: cada quien usa el de su propio proyecto.
 
 ### Opción B: Firebase Emulator Suite (sin cuenta en la nube)
 
@@ -114,7 +116,7 @@ Cuentas de demostración (contraseña `EcoMarket2026`):
 ### Pasarela de pagos ePayco
 
 1. Cree una cuenta en [epayco.com](https://epayco.com) y active el modo de pruebas.
-2. Copie la **llave pública** (Integraciones → Llaves API) en `gradle.properties`:
+2. Copie la **llave pública** (`PUBLIC_KEY`, en Integraciones → Llaves API) en `~/.gradle/gradle.properties`, fuera del repositorio, para no publicarla. Ese archivo tiene prioridad sobre el `gradle.properties` del proyecto. Nunca use la llave privada en la app.
    ```properties
    EPAYCO_PUBLIC_KEY=su_llave_publica
    EPAYCO_TEST=true
@@ -122,6 +124,8 @@ Cuentas de demostración (contraseña `EcoMarket2026`):
 3. Pague con la tarjeta de prueba de ePayco: Visa `4575 6231 8229 0326`, vencimiento `12/27`, CVV `123`.
 
 La llave incluida por defecto es la de demostración del repositorio oficial de ejemplos de ePayco: abre el checkout, pero ePayco rechaza la transacción porque no pertenece a un comercio activo.
+
+Si el banco pide verificación 3-D Secure, ePayco la abre en una ventana emergente; `PaymentActivity` la muestra encima del checkout y se cierra sola. Las cuentas de comercio nuevas tienen un monto máximo por transacción: si ePayco responde que el valor está fuera de los rangos permitidos, pruebe con un pedido más pequeño.
 
 ### APK
 
@@ -132,7 +136,11 @@ La llave incluida por defecto es la de demostración del repositorio oficial de 
 
 ## Capturas
 
-En [`docs/capturas`](docs/capturas) hay capturas de cada pantalla por rol.
+En [`docs/capturas`](docs/capturas) hay capturas de cada pantalla por rol, tomadas en un Samsung Galaxy S23 FE (Android 16) con Firebase en la nube, incluido el pago aprobado con ePayco en modo de pruebas. Los datos personales están ocultos.
+
+## Pruebas
+
+La app se probó en un emulador Pixel 6 (Android 14) con el Firebase Emulator Suite y en un dispositivo físico con Firebase en la nube: registro, login por rol, recuperación de contraseña, ingreso con huella real, productos con foto de cámara y galería, moderación, CRUD de usuarios con bitácora, carrito, ubicación, pago aprobado con ePayco (incluida la verificación 3-D Secure), envíos y reporte. El detalle está en el documento técnico.
 
 ## Control de versiones
 
