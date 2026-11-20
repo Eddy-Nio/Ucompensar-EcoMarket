@@ -23,7 +23,9 @@
         android:indeterminate="true"
         app:indicatorColor="@color/eco_orange" />
 
+    <!-- Contenedor del checkout; aquí se agrega encima la ventana de validación 3-D Secure -->
     <FrameLayout
+        android:id="@+id/webContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">

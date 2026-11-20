@@ -4,12 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Message
 import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -38,6 +42,7 @@ class PaymentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPaymentBinding
     private lateinit var order: Order
     private var handled = false
+    private var popup: WebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,34 +62,77 @@ class PaymentActivity : AppCompatActivity() {
         }
     }
 
+    /** ePayco redirige a RESPONSE_URL?ref_payco=...; esa navegación se intercepta en cualquier ventana. */
+    private val responseInterceptor = object : WebViewClient() {
+        override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+            val reference = EpaycoGateway.referenceFrom(request.url.toString()) ?: return false
+            onReference(reference)
+            return true
+        }
+    }
+
     /** Configura el WebView y carga la plantilla del checkout con los datos de la orden. */
-    @SuppressLint("SetJavaScriptEnabled")
     private fun loadCheckout() {
         val web = binding.webCheckout
-        web.settings.javaScriptEnabled = true // checkout.js de ePayco lo requiere
-        web.settings.domStorageEnabled = true
+        configureWebView(web)
         web.addJavascriptInterface(CheckoutBridge(), BRIDGE_NAME)
         web.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 binding.progress.show(newProgress < FULL_PROGRESS)
             }
-        }
-        web.webViewClient = object : WebViewClient() {
-            // ePayco redirige a RESPONSE_URL?ref_payco=...; esa navegación se intercepta aquí
-            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                val reference = EpaycoGateway.referenceFrom(request.url.toString()) ?: return false
-                onReference(reference)
+
+            // La validación 3-D Secure del banco se abre con window.open y se comunica con el checkout
+            // por window.opener y postMessage; por eso se crea una ventana hija en vez de reemplazar la página.
+            override fun onCreateWindow(view: WebView, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message): Boolean {
+                val child = openPopup()
+                (resultMsg.obj as WebView.WebViewTransport).webView = child
+                resultMsg.sendToTarget()
                 return true
             }
         }
+        web.webViewClient = responseInterceptor
         val html = EpaycoGateway.checkoutPage(this, order, Session.current.phone)
         web.loadDataWithBaseURL(EpaycoGateway.BASE_URL, html, "text/html", "UTF-8", null)
+    }
+
+    /** Ajustes comunes del checkout y de la ventana 3-D Secure. */
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun configureWebView(web: WebView) {
+        web.settings.javaScriptEnabled = true // checkout.js de ePayco lo requiere
+        web.settings.domStorageEnabled = true
+        web.settings.javaScriptCanOpenWindowsAutomatically = true
+        web.settings.setSupportMultipleWindows(true)
+        // El formulario del banco (ACS) corre en otro dominio y necesita sus cookies
+        CookieManager.getInstance().setAcceptThirdPartyCookies(web, true)
+    }
+
+    /** Crea la ventana emergente encima del checkout; se cierra cuando la página llama window.close(). */
+    private fun openPopup(): WebView {
+        closePopup()
+        val child = WebView(this)
+        configureWebView(child)
+        child.webViewClient = responseInterceptor
+        child.webChromeClient = object : WebChromeClient() {
+            override fun onCloseWindow(window: WebView) = closePopup()
+        }
+        binding.webContainer.addView(child, 1, FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT))
+        popup = child
+        return child
+    }
+
+    private fun closePopup() {
+        popup?.let {
+            binding.webContainer.removeView(it)
+            it.destroy()
+        }
+        popup = null
     }
 
     /** Valida la referencia con ePayco, comprueba factura y monto, y guarda el resultado. */
     private fun onReference(reference: String) {
         if (handled) return
         handled = true
+        closePopup()
         binding.panelValidating.show(true)
         launchSafely {
             val result = EpaycoGateway.validate(reference)
@@ -148,7 +196,10 @@ class PaymentActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        if (::binding.isInitialized) binding.webCheckout.destroy()
+        if (::binding.isInitialized) {
+            closePopup()
+            binding.webCheckout.destroy()
+        }
         super.onDestroy()
     }
 
