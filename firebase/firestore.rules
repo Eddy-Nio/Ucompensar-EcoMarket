@@ -60,9 +60,11 @@ service cloud.firestore {
       allow delete: if isAdmin() || (isSeller() && resource.data.sellerId == request.auth.uid);
     }
 
-    // Carrito: privado de cada usuario.
+    // Carrito: privado de cada usuario. El administrador solo puede leerlo y borrarlo para
+    // eliminar el carrito junto con la cuenta (UserRepository.delete); no puede crearlo ni editarlo.
     match /carts/{uid}/items/{productId} {
       allow read, write: if signedIn() && request.auth.uid == uid;
+      allow read, delete: if isAdmin();
     }
 
     // Órdenes: el comprador crea y paga las suyas; los vendedores implicados avanzan el envío; el administrador ve todo.
