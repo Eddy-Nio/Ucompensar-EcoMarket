@@ -44,7 +44,9 @@ class EcoMarketApp : Application() {
         fun demoOptions(): FirebaseOptions = FirebaseOptions.Builder()
             .setProjectId("demo-ecomarket")
             .setApplicationId("1:000000000000:android:0000000000000000")
-            .setApiKey("AIzaSyDemoKeyLocalEmulatorOnly000000000")
+            // Valor de relleno con el formato que exige el SDK (A + 38 caracteres); no es una
+            // llave de Google y el emulador no la valida.
+            .setApiKey("ADemoKeyLocalEmulatorOnly00000000000000")
             .setStorageBucket("demo-ecomarket.appspot.com")
             .build()
 
